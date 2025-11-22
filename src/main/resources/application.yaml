@@ -5,9 +5,13 @@ spring:
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  sql:
+    init:
+      mode: never
+
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
@@ -21,7 +25,7 @@ jwt:
     access-key: "GxNfK0XvN7pM3jB2YqRtZl4s8dF1vC9qTzE5aWm2sUuLxOeH"
     refresh-key: "JrW4pD7aZsQ8xR1mTgB2yV5fNnL9kC3vEoH6qUuP0wYtSxMz"
   ttl:
-    access: 3 #min
+    access: 20 #min
     refresh: 7 # days
 
 openai:

@@ -1,6 +1,8 @@
 package com._oormthonUNIV.newnew.news.service.impl;
 
 import com._oormthonUNIV.newnew.news.entity.News;
+import com._oormthonUNIV.newnew.news.repository.NewsCrawlerRepository;
+import com._oormthonUNIV.newnew.news.repository.NewsRepository;
 import com._oormthonUNIV.newnew.news.service.NewsService;
 import com._oormthonUNIV.newnew.user.entity.Users;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +14,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NewsServiceImpl implements NewsService {
 
+    private final NewsRepository repository;
+
     @Override
-    public News getById(String newsId) {
-        return null;
+    public News getById(Long newsId) {
+        return repository.findById(newsId)
+                .orElseThrow( () -> new IllegalArgumentException("News with id " + newsId + " not found!") );
     }
 
     @Override

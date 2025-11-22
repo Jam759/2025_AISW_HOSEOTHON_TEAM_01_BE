@@ -103,15 +103,6 @@ public class NaverNewsCrawler {
                 }
             }
 
-            System.out.println("====== 기사 크롤링 결과 ======");
-            System.out.println("URL       : " + articleUrl);
-            System.out.println("제목      : " + title);
-            System.out.println("기자      : " + reporter);
-            System.out.println("작성시간  : " + writtenAt);
-            System.out.println("본문길이  : " + contentText.length());
-            System.out.println("이미지URL : " + firstImageUrl);
-            System.out.println("================================");
-
             return News.builder()
                     .title(title)
                     .author(reporter)
@@ -121,7 +112,6 @@ public class NaverNewsCrawler {
                     .build();
 
         } catch (IOException e) {
-            System.err.println("기사 크롤링 실패: " + articleUrl);
             e.printStackTrace();
             return null;
         }

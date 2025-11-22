@@ -23,6 +23,7 @@ import com.openai.models.chat.completions.ChatCompletionCreateParams;
 import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -87,29 +88,40 @@ public class ApiWorker {
             try {
                 task = queue.take();
                 News news = newsService.getById(task.getNewsId());
-                AiNewsReport newsReport =
-                        aiNewsReportService.findByNewsId(news.getTitle())
-                                .orElse(
-                                        aiNewsReportService.save(AiNewsReport.builder()
-                                                .news(news)
-                                                .aspectReason(null)
-                                                .commonAspect(null)
-                                                .build())
-                                );
+
+                AiNewsReport newsReport = aiNewsReportService.findByNewsId(news.getId())
+                        .orElseGet(() -> {
+                            try {
+                                return aiNewsReportService.save(AiNewsReport.builder()
+                                        .news(news)
+                                        .aspectReason(null)
+                                        .commonAspect(null)
+                                        .build());
+                            } catch (DataIntegrityViolationException e) {
+                                // 이미 다른 스레드가 먼저 생성한 상황
+                                return aiNewsReportService.findByNewsId(news.getId()).orElseThrow();
+                            }
+                        });
 
                 List<AiGenerationSurveyStatistics> statisticsList =
                         aiGenerationSurveyStatisticsService.getByAiNewsReportId(newsReport.getId());
 
                 List<SurveyAnswer> newsGenerationSurveyList =
-                        surveyService.getByNewsIdAndGeneration(news.getTitle(), task.getGeneration());
+                        surveyService.getByNewsIdAndGeneration(news.getId(), task.getGeneration());
 
 
                 // gpt응답 내역 처리 로직
                 String response = chat(promptProvider.statisticGenerationAddData(
                         newsGenerationSurveyList, task.getGeneration(), news
                 ));
+                log.info("\n[API WORKER] GPT SAY - > {}\n", response);
+                String cleanedResponse = response.strip();
+                if (cleanedResponse.startsWith("Optional[")) {
+                    cleanedResponse = cleanedResponse.substring("Optional[".length(), cleanedResponse.length() - 1);
+                }
+                log.info("\n[API WORKER] GPT SAY CLEAN- > {}\n", cleanedResponse);
 
-                GenerationAspectDTO dto = mapper.readValue(response, GenerationAspectDTO.class);// 문자열 → Enum 변환
+                GenerationAspectDTO dto = mapper.readValue(cleanedResponse, GenerationAspectDTO.class);// 문자열 → Enum 변환
                 UserGeneration generationEnum = getGeneration(dto.getGeneration());
                 AiGenerationSurveyStatistics aiGenerationSurveyStatistics
                         = AiFactory.toAiGenerationSurveyStatistics(newsReport, generationEnum, dto);
@@ -122,6 +134,12 @@ public class ApiWorker {
                     String secResponse = chat(
                             promptProvider.statisticAllGenerationAddData(news,statisticsList)
                     );
+                    if (secResponse.startsWith("Optional[")) {
+                        secResponse = secResponse.substring("Optional[".length(), secResponse.length() - 1);
+                    }
+                    log.info("\n[API WORKER] GPT SAY CLEAN- > {}\n", secResponse);
+
+
                     AllGenerationAspectDTO dto2 = mapper.readValue(secResponse, AllGenerationAspectDTO.class);// 문자열 → Enum 변환
                     newsReport.update(dto2);
                     aiNewsReportService.save(newsReport);

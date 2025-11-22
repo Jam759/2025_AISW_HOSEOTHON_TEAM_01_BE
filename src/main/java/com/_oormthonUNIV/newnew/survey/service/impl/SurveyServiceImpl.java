@@ -6,6 +6,8 @@ import com._oormthonUNIV.newnew.news.service.NewsService;
 import com._oormthonUNIV.newnew.survey.dto.request.UserSurveySaveRequest;
 import com._oormthonUNIV.newnew.survey.dto.response.NewsSurveyResponse;
 import com._oormthonUNIV.newnew.survey.entity.SurveyAnswer;
+import com._oormthonUNIV.newnew.survey.exception.SurveyAnswerErrorCode;
+import com._oormthonUNIV.newnew.survey.exception.SurveyAnswerException;
 import com._oormthonUNIV.newnew.survey.factory.SurveyFactory;
 import com._oormthonUNIV.newnew.survey.repository.SurveyAnswerRepository;
 import com._oormthonUNIV.newnew.survey.service.SurveyService;
@@ -33,15 +35,19 @@ public class SurveyServiceImpl implements SurveyService {
     @Override
     public void saveUserAnswer(UserSurveySaveRequest request, Users user) {
         News news = newsService.getById(request.getNewsId());
-        List<SurveyAnswer> answerList = SurveyFactory.toSurveyAnswers(news, request, user);
+        List<SurveyAnswer> answerList =
+                surveyAnswerRepository.findByNewsIdAndUserId(news.getId(), user.getId());
+        if(!answerList.isEmpty()){
+            throw new SurveyAnswerException(SurveyAnswerErrorCode.SURVEY_ANSWER_DUPLICATED);
+        }
+        answerList = SurveyFactory.toSurveyAnswers(news, request, user);
         SurveyStatisticsTask task = SurveyFactory.toSurveyStatisticsTask(news, user);
-        queue.offer(task);
         surveyAnswerRepository.saveAll(answerList);
-        // -> 여기에 세대별 로직 만들어야함
+        queue.offer(task);
     }
 
     @Override
-    public List<SurveyAnswer> getByNewsIdAndGeneration(String newsId, UserGeneration generation) {
-        return surveyAnswerRepository.findByNews_TitleAndGeneration(newsId, generation);
+    public List<SurveyAnswer> getByNewsIdAndGeneration(Long newsId, UserGeneration generation) {
+        return surveyAnswerRepository.findByNewsIdAndGeneration(newsId, generation);
     }
 }

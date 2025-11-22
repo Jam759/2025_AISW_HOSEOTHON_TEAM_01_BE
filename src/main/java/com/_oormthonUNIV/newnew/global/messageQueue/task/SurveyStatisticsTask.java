@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class SurveyStatisticsTask {
 
     //설문한 뉴스 아이디
-    private String newsId;
+    private Long newsId;
 
     //설문을 마친 유저의 세대
     private UserGeneration generation;

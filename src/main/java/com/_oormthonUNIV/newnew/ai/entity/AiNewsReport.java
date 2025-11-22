@@ -17,7 +17,7 @@ import lombok.*;
 public class AiNewsReport extends LongIdEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "news_id", nullable = false)
+    @JoinColumn(name = "news_id", nullable = false,updatable = false)
     private News news;
 
     private String commonAspect;

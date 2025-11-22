@@ -14,5 +14,5 @@ public interface SurveyService {
 
     void saveUserAnswer(UserSurveySaveRequest request, Users user);
 
-    List<SurveyAnswer> getByNewsIdAndGeneration(String newsId, UserGeneration generation);
+    List<SurveyAnswer> getByNewsIdAndGeneration(Long newsId, UserGeneration generation);
 }
