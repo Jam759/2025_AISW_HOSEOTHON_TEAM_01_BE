@@ -1,6 +1,5 @@
 package com._oormthonUNIV.newnew.news.entity;
 
-import com._oormthonUNIV.newnew.global.util.LongIdEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -23,15 +23,10 @@ public class NaverNewsCrawler {
 
     /**
      * 기사 1개 URL을 받아서 News 엔티티 1개를 만들어 돌려주는 메서드.
-     * 실패하거나 댓글 페이지면 null 반환.
+     * 실패하거나 댓글 페이지면 건너띔
      */
     public News crawlArticle(String articleUrl, NewsCategory category) {
         try {
-            // 댓글 페이지면 바로 스킵
-            if (articleUrl.contains("/article/comment/")) {
-                System.out.println("[SKIP] 댓글 페이지라서 크롤링하지 않음: " + articleUrl);
-                return null;
-            }
 
             Document doc = Jsoup.connect(articleUrl)
                     .userAgent(USER_AGENT)
@@ -46,7 +41,7 @@ public class NaverNewsCrawler {
             Element reporterEl = doc.selectFirst(".media_end_head_journalist_name, .byline_s");
             String reporter = reporterEl != null ? reporterEl.text().trim() : "";
 
-            // 3) 작성 시간 (문자열로만 사용 중이면 이렇게)
+            // 3) 작성 시간
             Element timeEl = doc.selectFirst("span.media_end_head_info_datestamp_time._ARTICLE_DATE_TIME");
             String writtenAt = "";
             if (timeEl != null) {
@@ -89,7 +84,6 @@ public class NaverNewsCrawler {
                         continue;
                     }
 
-                    // 필요하면 도메인 필터 유지, 아니면 이 if 제거
                     if (!(src.contains("imgnews.pstatic.net") || src.contains("mimgnews.pstatic.net"))) {
                         // continue;
                     }
@@ -99,7 +93,6 @@ public class NaverNewsCrawler {
                 }
             }
 
-            // og:image fallback
             if (firstImageUrl == null || firstImageUrl.isBlank()) {
                 Element ogImg = doc.selectFirst("meta[property=og:image]");
                 if (ogImg != null) {
@@ -119,7 +112,6 @@ public class NaverNewsCrawler {
             System.out.println("이미지URL : " + firstImageUrl);
             System.out.println("================================");
 
-            // 여기서는 DB에 저장하지 않고 News만 만들어서 돌려준다.
             return News.builder()
                     .title(title)
                     .author(reporter)
