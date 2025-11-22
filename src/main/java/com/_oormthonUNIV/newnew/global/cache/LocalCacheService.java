@@ -1,4 +1,4 @@
-package com._oormthonUNIV.newnew.global.service;
+package com._oormthonUNIV.newnew.global.cache;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;

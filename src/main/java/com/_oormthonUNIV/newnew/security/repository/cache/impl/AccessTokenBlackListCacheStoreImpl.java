@@ -1,7 +1,7 @@
 package com._oormthonUNIV.newnew.security.repository.cache.impl;
 
 
-import com._oormthonUNIV.newnew.global.service.LocalCacheService;
+import com._oormthonUNIV.newnew.global.cache.LocalCacheService;
 import com._oormthonUNIV.newnew.global.util.TimeUtil;
 import com._oormthonUNIV.newnew.security.dto.cache.AccessTokenBlackListCache;
 import com._oormthonUNIV.newnew.security.repository.cache.AccessTokenBlackListCacheStore;

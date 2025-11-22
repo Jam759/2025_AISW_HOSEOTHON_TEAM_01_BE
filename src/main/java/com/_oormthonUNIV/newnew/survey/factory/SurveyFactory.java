@@ -1,5 +1,6 @@
 package com._oormthonUNIV.newnew.survey.factory;
 
+import com._oormthonUNIV.newnew.global.messageQueue.task.SurveyStatisticsTask;
 import com._oormthonUNIV.newnew.news.entity.News;
 import com._oormthonUNIV.newnew.survey.dto.request.UserSurveySaveRequest;
 import com._oormthonUNIV.newnew.survey.dto.response.NewsSurveyResponse;
@@ -40,6 +41,14 @@ public class SurveyFactory {
             );
         }
         return surveyAnswers;
+    }
+
+    public static SurveyStatisticsTask toSurveyStatisticsTask(News news, Users user) {
+        return SurveyStatisticsTask.builder()
+                .newsId(news.getId())
+                .generation(user.getGeneration())
+                .reTryCount((short) 0)
+                .build();
     }
 
 
