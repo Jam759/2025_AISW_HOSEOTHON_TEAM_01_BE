@@ -17,9 +17,6 @@ public class News extends LongIdEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
-    private String content;
-
     private String author;
 
     @Column(nullable = false)

@@ -23,3 +23,7 @@ jwt:
   ttl:
     access: 3 #min
     refresh: 7 # days
+
+openai:
+  api:
+    key: ${OPENAI-API-KEY:}
