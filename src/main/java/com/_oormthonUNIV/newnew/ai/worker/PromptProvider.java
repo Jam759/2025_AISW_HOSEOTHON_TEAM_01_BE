@@ -31,6 +31,7 @@ public class PromptProvider {
             - Optional, Some(), Result<> 등 어떤 래핑 형태도 출력하지 않습니다.
             - 문자열 외의 타입(JSON 객체, 리스트 등)은 출력하지 않습니다.
             - JSON은 최상위에 하나만 존재해야 합니다.
+            - 분석 데이터가 충분하지 않을 경우 더미 데이터를 생성하셔도 됩니다.
             
             ### 출력 JSON 형식 예시
             {
@@ -79,6 +80,7 @@ public class PromptProvider {
             - Optional, Some(), Result<> 등 어떤 래핑 형태도 출력하지 않습니다.
             - 문자열 외의 타입(JSON 객체, 리스트 등)은 출력하지 않습니다.
             - JSON은 최상위에 하나만 존재해야 합니다.
+            - 분석 데이터가 충분하지 않을 경우 더미 데이터를 생성하셔도 됩니다.
             
             ### AiNewsReport 구조(java)
             public AiNewsReport{

@@ -109,6 +109,7 @@ public class NaverNewsCrawler {
                     .content(contentText)
                     .category(category)              // 섹션에 따라 다르게
                     .news_created_at(LocalDateTime.now())
+                    .thumbnailUrl(firstImageUrl)
                     .build();
 
         } catch (IOException e) {

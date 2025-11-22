@@ -20,6 +20,8 @@ public interface NewsCrawlerRepository extends JpaRepository<News,Long> {
     @Query("update News n set n.viewCount = n.viewCount + 1 where n.id = :id")
     void increaseViewCount(@Param("id") Long id);
 
+    // viewCount 내림차순으로 상위 2개
+    List<News> findTop2ByOrderByViewCountDesc();
     // 인기순 조회용
 //    List<News> findTop10ByOrderByViewCountDescNews_created_atDesc();
 }

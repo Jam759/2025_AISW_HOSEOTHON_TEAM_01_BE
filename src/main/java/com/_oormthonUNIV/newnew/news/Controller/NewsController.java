@@ -1,18 +1,23 @@
-package com._oormthonUNIV.newnew.news.Controller;
+package com._oormthonUNIV.newnew.news.controller;
 
 import com._oormthonUNIV.newnew.news.DTO.response.NewsDetailResponseDto;
 import com._oormthonUNIV.newnew.news.DTO.response.NewsListResponseDto;
 import com._oormthonUNIV.newnew.news.entity.News;
+import com._oormthonUNIV.newnew.news.repository.NewsCrawlerRepository;
 import com._oormthonUNIV.newnew.news.service.impl.NewsServiceImpl;
 import com._oormthonUNIV.newnew.security.entity.UserDetailImpl;
 import com._oormthonUNIV.newnew.user.entity.Users;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @Controller
@@ -21,12 +26,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class NewsController {
 
     private final NewsServiceImpl newsServiceImpl;
+    private final NewsCrawlerRepository newsCrawlerRepository;
 
     @GetMapping("/News")
     public NewsListResponseDto getNews() {
-        return newsServiceImpl.getNewsList();
+        List<News> news = newsCrawlerRepository.findAll(Sort.by(Sort.Direction.DESC, "newsCreatedAt"));
+        return NewsListResponseDto.of(news);
     }
-
 
     @GetMapping("/News/{newsId}") // 상세페이지
     public NewsDetailResponseDto getNewsDetail(
@@ -40,5 +46,17 @@ public class NewsController {
         boolean reportBlur = false; // 지금은 하드코딩, 나중에 로직 붙이면 됨
 
         return NewsDetailResponseDto.of(news, reportBlur);
+    }
+
+    @GetMapping("/News/viewCount")
+    public NewsListResponseDto getLankingNews() {
+        List<News> news = newsServiceImpl.getRanking();
+        return NewsListResponseDto.of(news);
+    }
+
+    @GetMapping("/report")
+    public NewsListResponseDto getReport() {
+        List<News> news = newsServiceImpl.getRanking();
+        return NewsListResponseDto.of(news);
     }
 }

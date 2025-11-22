@@ -8,7 +8,7 @@ public record NewsListResponseDto(
         List<NewsCardDto> newsList
 ) {
     // 서비스/컨트롤러에서 바로 쓸 수 있는 팩토리 메서드
-    public static NewsListResponseDto of(boolean reportBlur, List<News> newsList) {
+    public static NewsListResponseDto of(List<News> newsList) {
         List<NewsCardDto> cards = newsList.stream()
                 .map(NewsCardDto::from)   // 엔티티 하나씩 DTO로 변환
                 .toList();

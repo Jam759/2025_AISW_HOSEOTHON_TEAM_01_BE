@@ -17,4 +17,6 @@ public interface NewsService {
     NewsListResponseDto getNewsList();
 
     News getNewsDetail(Long newsId);
+
+    List<News> getRanking();
 }
