@@ -2,6 +2,7 @@ package com._oormthonUNIV.newnew.survey.controller;
 
 import com._oormthonUNIV.newnew.security.entity.UserDetailImpl;
 import com._oormthonUNIV.newnew.survey.dto.request.UserSurveySaveRequest;
+import com._oormthonUNIV.newnew.survey.dto.response.NewsReportResponse;
 import com._oormthonUNIV.newnew.survey.dto.response.NewsSurveyResponse;
 import com._oormthonUNIV.newnew.survey.service.SurveyService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,6 +41,11 @@ public class SurveyController {
             @AuthenticationPrincipal UserDetailImpl userDetails
     ) {
         surveyService.saveUserAnswer(request, userDetails.getUser());
+    }
+
+    @GetMapping("/survey/statistics/{newsId}")
+    public NewsReportResponse getSurveyStatics(@PathVariable Long newsId, @AuthenticationPrincipal UserDetailImpl userDetails) {
+        return surveyService.getNewsReport(newsId, userDetails.getUser());
     }
 
 }
