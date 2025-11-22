@@ -37,7 +37,7 @@ public class NaverNewsScheduler {
                     + "AppleWebKit/537.36 (KHTML, like Gecko) "
                     + "Chrome/120.0.0.0 Safari/537.36";
 
-    @Scheduled(fixedRate = 5 * 60 * 1000) // 5분
+    @Scheduled(fixedRate = 10 * 60 * 1000) // 5분
     public void crawlAllSections() {
         crawlSection(POLITICS_URL, NewsCategory.POLITICS);
         crawlSection(ECONOMY_URL, NewsCategory.ECONOMY);
@@ -77,8 +77,6 @@ public class NaverNewsScheduler {
             for (String articleUrl : articleUrls) {
                 if (count >= limit) break;
                 count++;
-
-                log.info("기사 크롤링 시도: {}", articleUrl);
 
                 News news = naverNewsCrawler.crawlArticle(articleUrl, category);
 

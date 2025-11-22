@@ -1,5 +1,6 @@
 package com._oormthonUNIV.newnew.news.entity;
 
+import com._oormthonUNIV.newnew.global.util.LongIdEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,9 +11,8 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class News{
+public class News extends LongIdEntity {
 
-    @Id
     @Column(nullable = false)
     private String title;
 
